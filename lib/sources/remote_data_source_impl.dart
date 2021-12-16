@@ -1,8 +1,4 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:userapp/model/request/login_request_model.dart';
-import 'package:userapp/models/login_response_model.dart';
 import 'package:userapp/models/news_response.dart';
 import 'remote_data_source.dart';
 

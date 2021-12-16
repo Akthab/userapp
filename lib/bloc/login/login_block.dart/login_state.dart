@@ -17,13 +17,3 @@ class LoginError extends LoginState {
   @override
   List<Object> get props => [errorResponseModel];
 }
-
-// Documents Downloaded
-// class DocumentsDownloadedSuccess extends LoginState {
-//   final CommonSuccessResponseModel commonSuccessResponseModel;
-
-//   const DocumentsDownloadedSuccess({required this.commonSuccessResponseModel});
-
-//   @override
-//   List<Object> get props => [commonSuccessResponseModel];
-// }

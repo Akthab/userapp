@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:userapp/bloc/add/add_bloc.dart';
 import 'package:userapp/routes/route.dart' as route;
 
 void main() => runApp(const MyApp());
@@ -139,14 +138,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
                             width: 150,
                             child: Row(children: [
                               IconButton(
-                                icon: const Icon(Icons.edit),
-                                tooltip: 'Edit list',
-                                // onPressed: () => Navigator.pushNamed(
-                                //     context, route.loginPage)
-                                onPressed: () {
-                                  _displayEditDialog(context, index);
-                                },
-                              ),
+                                  icon: const Icon(Icons.edit),
+                                  tooltip: 'Edit list',
+                                  onPressed: () => Navigator.pushNamed(
+                                      context, route.homePage)
+                                  // onPressed: () {
+                                  //   _displayEditDialog(context, index);
+                                  // },
+                                  ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 tooltip: 'Delete item',
@@ -166,8 +165,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
           child: const Icon(Icons.add),
         ),
       ),
-      onGenerateRoute: route.controller,
-      initialRoute: route.editPage,
+      // onGenerateRoute: route.controller,
+      // initialRoute: route.editPage,
     );
   }
 

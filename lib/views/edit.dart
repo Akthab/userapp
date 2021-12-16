@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:userapp/app_enums.dart';
-import 'package:userapp/bloc/add/counterevent.dart';
 import 'package:userapp/bloc/login/login_block.dart/login_block.dart';
 import 'package:userapp/model/request/login_request_model.dart';
 import 'package:userapp/routes/route.dart' as route;
@@ -66,7 +65,7 @@ class _EditPageState extends BaseViewState<EditPage> {
                     )),
                 ElevatedButton(
                     onPressed: () =>
-                        Navigator.pushNamed(context, route.newsArticle),
+                        Navigator.pushNamed(context, route.homePage),
                     child: const Text('Article Page'))
               ],
             )));
