@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:userapp/navigation/constants/navigation_route_constant.dart';
+import 'package:userapp/navigation/routes/navigation_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:userapp/routes/route.dart' as route;
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -33,36 +36,37 @@ class _MyCustomFormState extends State<MyCustomForm> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   // final AddTodoListBloc _bloc = injection<AddTodoListBloc>();
 
-  final myController = TextEditingController();
+  final addController = TextEditingController();
+  final editController = TextEditingController();
 
   bool _isShown = true;
 
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
-    super.dispose();
-  }
-
   _displayAddDialog(BuildContext context) async {
     return showDialog(
+        barrierDismissible: false,
         context: context,
-        builder: (context) {
+        builder: (ctx) {
           return AlertDialog(
             title: const Text('Enter name'),
             content: TextField(
-              controller: myController,
+              controller: addController,
               textInputAction: TextInputAction.go,
               decoration: const InputDecoration(hintText: "name"),
             ),
-            actions: <Widget>[
-              new FloatingActionButton(
-                child: new Text('Add'),
-                onPressed: () {
-                  addItem(myController.text);
-                  Navigator.of(context).pop();
-                },
-              )
+            actions: [
+              FloatingActionButton(
+                  onPressed: () {
+                    addItem(addController.text);
+                    addController.clear();
+                    Navigator.pop(ctx);
+                  },
+                  child: Text('Add')),
+              FloatingActionButton(
+                  onPressed: () {
+                    addController.clear();
+                    // Navigator.pop(ctx);
+                  },
+                  child: Text('Cancel'))
             ],
           );
         });
@@ -70,23 +74,30 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
   _displayEditDialog(BuildContext context, int indexOfItem) async {
     return showDialog(
+        barrierDismissible: false,
         context: context,
-        builder: (context) {
+        builder: (ctx) {
           return AlertDialog(
             title: const Text('Enter the new name'),
             content: TextField(
-              controller: myController,
+              controller: editController,
               textInputAction: TextInputAction.go,
               decoration: const InputDecoration(hintText: "name"),
             ),
-            actions: <Widget>[
+            actions: [
               FloatingActionButton(
-                child: new Text('Update'),
-                onPressed: () {
-                  editItem(indexOfItem, myController.text);
-                  Navigator.of(context).pop();
-                },
-              )
+                  onPressed: () {
+                    editItem(indexOfItem, editController.text);
+                    editController.clear();
+                    Navigator.pop(ctx);
+                  },
+                  child: Text('Update')),
+              FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    // editController.clear();
+                  },
+                  child: Text('Cancel'))
             ],
           );
         });
@@ -94,25 +105,22 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
   void _deleteConfirmBox(BuildContext context, String item) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text('Please Confirm'),
             content: Text('Are you sure to remove the item?'),
             actions: [
-              // The "Yes" button
               TextButton(
                   onPressed: () {
-                    // Remove the box
                     removeItem(item);
-                    // Close the dialog
-                    // Navigator.of(context).pop();
+                    Navigator.pop(ctx);
                   },
                   child: Text('Yes')),
               TextButton(
                   onPressed: () {
-                    // Close the dialog
-                    Navigator.of(context).pop();
+                    Navigator.pop(ctx);
                   },
                   child: Text('No'))
             ],
@@ -138,14 +146,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
                             width: 150,
                             child: Row(children: [
                               IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  tooltip: 'Edit list',
-                                  onPressed: () => Navigator.pushNamed(
-                                      context, route.homePage)
-                                  // onPressed: () {
-                                  //   _displayEditDialog(context, index);
-                                  // },
-                                  ),
+                                icon: const Icon(Icons.edit),
+                                tooltip: 'Edit list',
+                                // onPressed: () => Navigator.pushNamed(
+                                //     context, route.homePage)
+                                onPressed: () {
+                                  _displayEditDialog(context, index);
+                                },
+                              ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 tooltip: 'Delete item',
@@ -165,8 +173,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
           child: const Icon(Icons.add),
         ),
       ),
-      // onGenerateRoute: route.controller,
-      // initialRoute: route.editPage,
+      onGenerateRoute: generateRoute,
+      initialRoute: NavigationRouteConstant.counter,
+      navigatorKey: navigatorKey,
     );
   }
 
@@ -215,5 +224,13 @@ class _MyCustomFormState extends State<MyCustomForm> {
     list.remove(item);
     saveData(list);
     loadData();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    addController.dispose();
+    editController.dispose();
+    super.dispose();
   }
 }
