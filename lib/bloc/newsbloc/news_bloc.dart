@@ -28,6 +28,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
       yield const GetNewsLoading();
 
       final failureOrSuccess = await _newsApiServices?.fetchNewsArticle();
+
       // print('failureOrSuccess');
 
       yield* _eitherFailureOrErrorState(failureOrSuccess!);
